@@ -22,6 +22,19 @@
         android:textColor="#FDFDFD"
         android:textSize="40sp" />
 
+    <TextView
+        android:id="@+id/results"
+        android:layout_width="280dp"
+        android:layout_height="55dp"
+        android:layout_below="@+id/text_view_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:fontFamily="@font/alfa_slab_one"
+        android:text="Sample Text"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:visibility="invisible" />
+
     <GridLayout
         android:id="@+id/layout_board"
         android:layout_width="351dp"
@@ -39,6 +52,7 @@
             android:layout_row="0"
             android:layout_column="0"
             android:backgroundTint="@color/colorPrimary"
+            android:text=""
             />
 
         <Button
@@ -116,13 +130,15 @@
     </GridLayout>
 
     <Button
-        android:layout_marginBottom="15dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
         android:id="@+id/button_restart"
-        android:textAllCaps="false"
+        android:layout_width="151dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/layout_board"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="20dp"
         android:text="Restart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textAllCaps="false" />
 
 </RelativeLayout>

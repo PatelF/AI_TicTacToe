@@ -2,10 +2,13 @@ package com.fenilpatel00.aivshumantictactoe;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity{
 
     private Button[][] boardCells = new Button[3][3];
     private int[][] board = new int[3][3];
+    private TextView results;
 
     private Button restart;
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity{
         boardCells[2][1] = findViewById(R.id.button7);
         boardCells[2][2] = findViewById(R.id.button8);
 
+        results = findViewById(R.id.results);
+
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
                 board[i][j] = 0;
@@ -62,63 +68,73 @@ public class MainActivity extends AppCompatActivity{
         boardCells[0][0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(0,0);
+
+                if(!isGameOver())
+                    move(0,0);
             }
         });
 
         boardCells[0][1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(0,1);
+                if(!isGameOver())
+                    move(0,1);
             }
         });
 
         boardCells[0][2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(0,2);
+                if(!isGameOver())
+                    move(0,2);
             }
         });
 
         boardCells[1][0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(1,0);
+                if(!isGameOver())
+                    move(1,0);
             }
         });
 
         boardCells[1][1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(1,1);
+                if(!isGameOver())
+                    move(1,1);
             }
         });
 
         boardCells[1][2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(1,2);
+                if(!isGameOver())
+                    move(1,2);
             }
         });
 
         boardCells[2][0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(2,0);
+                if(!isGameOver())
+                    move(2,0);
             }
         });
 
         boardCells[2][1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(2,1);
+                if(!isGameOver())
+                    move(2,1);
             }
         });
 
         boardCells[2][2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                move(2,2);
+                if(!isGameOver())
+                    move(2,2);
             }
         });
     }
@@ -145,18 +161,31 @@ public class MainActivity extends AppCompatActivity{
             }
 
                 if(hasPlayerWon(PLAYER_X)){
-                    Toast.makeText(MainActivity.this, "AI HAS WON!", Toast.LENGTH_LONG).show();
-                    restart();
+
+                    findTiles(PLAYER_X);
+                    results.setText("YOU LOST!");
+                    results.setVisibility(View.VISIBLE);
+                    results.setTextColor(getResources().getColor(R.color.red));
                 }
                 else if(hasPlayerWon(PLAYER_O)){
-                    Toast.makeText(MainActivity.this, "YOU HAVE WON!", Toast.LENGTH_LONG).show();
-                    restart();
+
+                    findTiles(PLAYER_O);
+                    results.setText("YOU WON!");
+                    results.setVisibility(View.VISIBLE);
+                    results.setTextColor(getResources().getColor(R.color.green));
                 }
             }
         }
         if(movesDone == 9){
-            Toast.makeText(MainActivity.this, "Tie Game!", Toast.LENGTH_LONG).show();
-            restart();
+            results.setText("TIE!");
+            results.setVisibility(View.VISIBLE);
+            results.setTextColor(getResources().getColor(R.color.yellow));
+
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 3; j++){
+                    boardCells[i][j].setTextColor(getResources().getColor(R.color.red));
+                }
+            }
         }
     }
 
@@ -241,8 +270,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         for(int i = 0; i < 3; i++){
-            if(field[i][0].equals(field[i][1])
-                    && field[i][0].equals(field[i][2])
+            if(field[i][0].equals(field[i][1]) && field[i][0].equals(field[i][2])
                     && field[i][0].equals(playerType)){
                 return true;
             }
@@ -250,27 +278,76 @@ public class MainActivity extends AppCompatActivity{
 
         for(int i = 0; i < 3; i++){
 
-            if(field[0][i].equals(field[1][i])
-                    && field[0][i].equals(field[2][i])
+            if(field[0][i].equals(field[1][i]) && field[0][i].equals(field[2][i])
                     && field[0][i].equals(playerType)){
                 return true;
             }
         }
 
-        if(field[0][0].equals(field[1][1])
-                && field[0][0].equals(field[2][2])
+        if(field[0][0].equals(field[1][1]) && field[0][0].equals(field[2][2])
                 && field[0][0].equals(playerType)) {
             return true;
         }
 
-        if(field[0][2].equals(field[1][1])
-                && field[0][2].equals(field[2][0])
+        if(field[0][2].equals(field[1][1]) && field[0][2].equals(field[2][0])
                 && field[0][2].equals(playerType)) {
             return true;
         }
 
         return false;
 
+    }
+
+    private void findTiles(int player){
+
+        String[][] field = new String[3][3];
+
+        String playerType;
+
+        if(player == 1){
+            playerType = "X";
+        }
+        else{
+            playerType = "O";
+        }
+
+        for(int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                field[i][j] = boardCells[i][j].getText().toString();
+            }
+        }
+
+        for(int i = 0; i < 3; i++){
+            if(field[i][0].equals(field[i][1]) && field[i][0].equals(field[i][2])
+                    && field[i][0].equals(playerType)){
+                boardCells[i][0].setTextColor(getResources().getColor(R.color.green));
+                boardCells[i][1].setTextColor(getResources().getColor(R.color.green));
+                boardCells[i][2].setTextColor(getResources().getColor(R.color.green));
+
+            }
+        }
+
+        for(int i = 0; i < 3; i++){
+            if(field[0][i].equals(field[1][i]) && field[0][i].equals(field[2][i])
+                    && field[0][i].equals(playerType)){
+                boardCells[0][i].setTextColor(getResources().getColor(R.color.green));
+                boardCells[1][i].setTextColor(getResources().getColor(R.color.green));
+                boardCells[2][i].setTextColor(getResources().getColor(R.color.green));
+            }
+        }
+
+        if(field[0][0].equals(field[1][1]) && field[0][0].equals(field[2][2])
+                && field[0][0].equals(playerType)) {
+            boardCells[0][0].setTextColor(getResources().getColor(R.color.green));
+            boardCells[1][1].setTextColor(getResources().getColor(R.color.green));
+            boardCells[2][2].setTextColor(getResources().getColor(R.color.green));
+        }
+        if(field[0][2].equals(field[1][1]) && field[0][2].equals(field[2][0])
+                && field[0][2].equals(playerType)) {
+            boardCells[0][2].setTextColor(getResources().getColor(R.color.green));
+            boardCells[1][1].setTextColor(getResources().getColor(R.color.green));
+            boardCells[2][0].setTextColor(getResources().getColor(R.color.green));
+        }
     }
 
     private List<Point> getAvailableCells(){
@@ -293,10 +370,17 @@ public class MainActivity extends AppCompatActivity{
 
         board[point.x][point.y] = player;
 
-        if(player == 1)
+        if(player == 1){
             boardCells[point.x][point.y].setText("X");
-        else if(player == 2)
+            boardCells[point.x][point.y].setTextSize(70);
+            boardCells[point.x][point.y].setTextColor(getResources().getColor(R.color.white));
+        }
+        else if(player == 2){
             boardCells[point.x][point.y].setText("O");
+            boardCells[point.x][point.y].setTextSize(70);
+            boardCells[point.x][point.y].setTextColor(getResources().getColor(R.color.white));
+        }
+
 
         return true;
     }
@@ -312,8 +396,9 @@ public class MainActivity extends AppCompatActivity{
                 board[i][j] = 0;
             }
         }
-
         movesDone = 0;
+
+        results.setVisibility(View.INVISIBLE);
 
     }
 }
